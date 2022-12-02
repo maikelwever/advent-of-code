@@ -14,6 +14,7 @@ def main():
     parser.add_argument('-b', '--bench', '--benchmark', action='store_true', help='Run the function 10000 times as a benchmark.')
     parser.add_argument('-q', '--quick', '--quick-bench', '--quick-benchmark', action='store_true', help='Run the function 100 times as a benchmark.')
     parser.add_argument('-d', '-v', '--debug', '--verbose', action='store_true', help='Set logging level to DEBUG')
+    parser.add_argument('-t', '--two', '--main-two', action='store_true', help='Run main_2 instead of main function')
     parser.add_argument('day', type=int, help='Index of the advent to look up.')
 
     args = parser.parse_args()
@@ -25,13 +26,17 @@ def main():
     with open(asset_path) as f:
         asset_contents = f.read()
 
+    if args.two:
+        def func():
+            day_module.main_2(asset_contents)
+    else:
+        def func():
+            day_module.main(asset_contents)
+
     if args.bench or args.quick:
         logging.basicConfig(level=logging.WARN)
 
-        def timeit_func():
-            day_module.main(asset_contents)
-
-        timer = Timer(timeit_func)
+        timer = Timer(func)
 
         repeat = 100 if args.quick else 10000
         result = timer.timeit(number=repeat)
@@ -43,7 +48,7 @@ def main():
         else:
             logging.basicConfig(level=logging.INFO)
 
-        day_module.main(asset_contents)
+        func()
 
 
 if __name__ == "__main__":
