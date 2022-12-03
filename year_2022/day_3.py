@@ -26,3 +26,18 @@ def main(data):
 
     logger.info("Sum of the priorities of the duplicated items: %d", sum)
 
+
+def main_2(data):
+    sum = 0
+
+    all_lines = data.splitlines()
+    for i in range(0, len(all_lines), 3):
+        three_lines = all_lines[i : i + 3]
+        duplicate_items = set(three_lines[0]).intersection(three_lines[1]).intersection(three_lines[2])
+        logger.debug('Duplicates for %r: %r', three_lines, duplicate_items)
+
+        for duplicate in duplicate_items:
+            priority = character_to_priority(duplicate)
+            sum += priority
+
+    logger.info("Sum of the priorities of the duplicated items: %d", sum)
