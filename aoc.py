@@ -13,8 +13,9 @@ def main():
     parser.add_argument('-y', '--year', type=int, default=2022, help='Yearly folder to use')
     parser.add_argument('-b', '--bench', '--benchmark', action='store_true', help='Run the function 10000 times as a benchmark.')
     parser.add_argument('-q', '--quick', '--quick-bench', '--quick-benchmark', action='store_true', help='Run the function 100 times as a benchmark.')
-    parser.add_argument('-d', '-v', '--debug', '--verbose', action='store_true', help='Set logging level to DEBUG')
+    parser.add_argument('-d', '--debug', action='store_true', help='Set logging level to DEBUG')
     parser.add_argument('-t', '--two', '--main-two', action='store_true', help='Run main_2 instead of main function')
+    parser.add_argument('-v', '--validate', action='store_true', help='Lookup day_x_example.txt instead of day_x.txt for validation')
     parser.add_argument('day', type=int, help='Index of the advent to look up.')
 
     args = parser.parse_args()
@@ -22,7 +23,13 @@ def main():
     import_statement = f'year_{args.year}.day_{args.day}'
     day_module = __import__(import_statement, globals(), locals(), [None], 0)
 
-    asset_path = Path(f'year_{args.year}') / 'assets' / f'day_{args.day}.txt'
+    asset_dir = Path(f'year_{args.year}') / 'assets'
+
+    if args.validate:
+        asset_path = asset_dir / f'day_{args.day}_example.txt'
+    else:
+        asset_path = asset_dir / f'day_{args.day}.txt'
+
     with open(asset_path) as f:
         asset_contents = f.read()
 

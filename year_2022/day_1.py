@@ -16,5 +16,5 @@ def main(asset):
 
     sorted_calories_sums = sorted(calories_sums, reverse=True)
     logger.info('Maximum calories: %d', sorted_calories_sums[0])
-    logger.info('Top 3 calories: %r', sorted_calories_sums[:3])
+    logger.info('Top 3 calories: %r', sum(sorted_calories_sums[:3]))
 
