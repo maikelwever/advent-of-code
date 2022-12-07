@@ -16,7 +16,7 @@ class Folder:
     def total_size(self):
         files_size = sum(self.files.values())
         folders_size = sum(d.total_size for d in self.folders.values())
-        logger.debug("Files: %r, Folders: %r", files_size, folders_size)
+        #logger.debug("Files: %r, Folders: %r", files_size, folders_size)
         return files_size + folders_size
 
     def add_file(self, name, size):
@@ -78,4 +78,28 @@ def main(data):
             logger.debug("Folder size: %d", w)
 
     logger.info("Total size of folders < 100000: %d", sum)
+
+def main_2(data):
+    sum = 0
+    root = parse_shell_output(data)
+    total_used_space = root.total_size
+    logger.debug("Size of root folder: %d", total_used_space)
+
+    free_space = 70000000 - total_used_space
+    logger.debug("Current free space: %d", free_space)
+
+    required_extra_space = 30000000 - free_space
+    logger.debug("Required extra space: %d", required_extra_space)
+
+    candidates_for_removal = [
+            w
+            for w in root.walk_sizes()
+            if w >= required_extra_space
+    ]
+
+    logger.debug("All candidates: %r", candidates_for_removal)
+    smallest_candidate = min(candidates_for_removal)
+    logger.info("The smallest folder that can be removed for the update to work is %d in size total", smallest_candidate)
+
+
 
